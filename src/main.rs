@@ -1,5 +1,5 @@
 use rocket::{
-    delete, get, post, put,
+    catch, catchers, delete, get, post, put,
     response::status,
     routes,
     serde::json::{json, Value},
@@ -54,10 +54,19 @@ fn update_rustacean(id: i32) -> Value {
 fn delete_rustacean(_id: i32) -> status::NoContent {
     status::NoContent
 }
+#[catch(404)]
+fn not_found() -> Value {
+    json!("Not Found!")
+}
+#[catch(422)]
+fn invalid_param() -> Value {
+    json!("Unprocessable Entity!")
+}
 
 #[rocket::main]
 async fn main() {
     let _ = rocket::build()
+        .register("/", catchers![not_found, invalid_param])
         .mount(
             "/",
             routes![

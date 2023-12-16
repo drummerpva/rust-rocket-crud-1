@@ -5,6 +5,10 @@ GET {{url}}/rustaceans
 ###
 GET {{url}}/rustaceans/1
 ###
+GET {{url}}/rustacHeans/1
+###
+GET {{url}}/rustaceans/asd
+###
 POST {{url}}/rustaceans
 Content-Type: application/json
 
