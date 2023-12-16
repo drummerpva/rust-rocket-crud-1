@@ -1,4 +1,24 @@
 ###
 @url = http://localhost:8000
 ###
-GET {{url}}/
+GET {{url}}/rustaceans
+###
+GET {{url}}/rustaceans/1
+###
+POST {{url}}/rustaceans
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "sdasdas@dasdasd.com"
+}
+###
+PUT {{url}}/rustaceans/1
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "sdasdas@dasdasd.com"
+}
+###
+DELETE {{url}}/rustaceans/1
