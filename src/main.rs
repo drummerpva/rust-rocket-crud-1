@@ -1,8 +1,11 @@
-use rocket::{get, routes};
+use rocket::{
+    get, routes,
+    serde::json::{json, Value},
+};
 
 #[get("/")]
-fn hello() -> &'static str {
-    "Hello, Mundo!\n"
+fn hello() -> Value {
+    json!({"message":"Hello, Mundo!"})
 }
 
 #[rocket::main]
