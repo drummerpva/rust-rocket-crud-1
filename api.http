@@ -1,6 +1,6 @@
 ###
 @url = http://localhost:8000
-@basicToken = QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+@basicToken = Zm9vOmJhcg==
 ###
 GET {{url}}/rustaceans
 Authorization: Basic {{basicToken}}

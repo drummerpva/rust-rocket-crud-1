@@ -28,6 +28,9 @@ impl BasicAuth {
         }
 
         let (username, password) = (split[0].to_string(), split[1].to_string());
+        if username != "foo".to_string() || password != "bar".to_string() {
+            return None;
+        }
         Some(BasicAuth { username, password })
     }
 }
