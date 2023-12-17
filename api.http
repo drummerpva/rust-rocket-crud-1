@@ -1,16 +1,22 @@
 ###
 @url = http://localhost:8000
+@basicToken = QWxhZGRpbjpvcGVuIHNlc2FtZQ==
 ###
 GET {{url}}/rustaceans
+Authorization: Basic {{basicToken}}
 ###
 GET {{url}}/rustaceans/1
+Authorization: Basic {{basicToken}}
 ###
 GET {{url}}/rustacHeans/1
+Authorization: Basic {{basicToken}}
 ###
 GET {{url}}/rustaceans/asd
+Authorization: Basic {{basicToken}}
 ###
 POST {{url}}/rustaceans
 Content-Type: application/json
+Authorization: Basic {{basicToken}}
 
 {
   "name": "John Doe",
@@ -19,6 +25,7 @@ Content-Type: application/json
 ###
 PUT {{url}}/rustaceans/1
 Content-Type: application/json
+Authorization: Basic {{basicToken}}
 
 {
   "name": "John Doe",
@@ -26,3 +33,4 @@ Content-Type: application/json
 }
 ###
 DELETE {{url}}/rustaceans/1
+Authorization: Basic {{basicToken}}

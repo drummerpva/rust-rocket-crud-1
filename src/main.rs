@@ -1,3 +1,5 @@
+mod auth;
+use auth::BasicAuth;
 use rocket::{
     catch, catchers, delete, get, post, put,
     response::status,
@@ -6,7 +8,7 @@ use rocket::{
 };
 
 #[get("/rustaceans")]
-fn get_rustaceans() -> Value {
+fn get_rustaceans(_auth: BasicAuth) -> Value {
     json!([
         {
             "id": 1,
@@ -20,7 +22,7 @@ fn get_rustaceans() -> Value {
 }
 
 #[get("/rustaceans/<id>")]
-fn view_rustacean(id: i32) -> Value {
+fn view_rustacean(id: i32, _auth: BasicAuth) -> Value {
     json!([
         {
             "id": id,
@@ -31,7 +33,7 @@ fn view_rustacean(id: i32) -> Value {
 }
 
 #[post("/rustaceans", format = "json")]
-fn create_rustacean() -> Value {
+fn create_rustacean(_auth: BasicAuth) -> Value {
     json!([
         {
             "id": 3,
@@ -41,7 +43,7 @@ fn create_rustacean() -> Value {
     ])
 }
 #[put("/rustaceans/<id>", format = "json")]
-fn update_rustacean(id: i32) -> Value {
+fn update_rustacean(id: i32, _auth: BasicAuth) -> Value {
     json!([
         {
             "id": id,
@@ -51,12 +53,16 @@ fn update_rustacean(id: i32) -> Value {
     ])
 }
 #[delete("/rustaceans/<_id>")]
-fn delete_rustacean(_id: i32) -> status::NoContent {
+fn delete_rustacean(_id: i32, _auth: BasicAuth) -> status::NoContent {
     status::NoContent
 }
 #[catch(404)]
 fn not_found() -> Value {
     json!("Not Found!")
+}
+#[catch(401)]
+fn unauthorized() -> Value {
+    json!("Unauthorized!")
 }
 #[catch(422)]
 fn invalid_param() -> Value {
@@ -66,7 +72,7 @@ fn invalid_param() -> Value {
 #[rocket::main]
 async fn main() {
     let _ = rocket::build()
-        .register("/", catchers![not_found, invalid_param])
+        .register("/", catchers![not_found, invalid_param, unauthorized])
         .mount(
             "/",
             routes![
