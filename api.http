@@ -5,7 +5,7 @@
 GET {{url}}/rustaceans
 Authorization: Basic {{basicToken}}
 ###
-GET {{url}}/rustaceans/1
+GET {{url}}/rustaceans/2
 Authorization: Basic {{basicToken}}
 ###
 GET {{url}}/rustacHeans/1
@@ -23,13 +23,13 @@ Authorization: Basic {{basicToken}}
   "email": "sdasdas@dasdasd.com"
 }
 ###
-PUT {{url}}/rustaceans/1
+PUT {{url}}/rustaceans/2
 Content-Type: application/json
 Authorization: Basic {{basicToken}}
 
 {
   "name": "John Doe",
-  "email": "sdasdas@dasdasd.com"
+  "email": "alterado@des.com"
 }
 ###
 DELETE {{url}}/rustaceans/1
