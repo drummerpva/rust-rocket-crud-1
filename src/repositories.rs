@@ -46,6 +46,7 @@ impl RustaceanRepository {
         Self::find(connection, id)
     }
     pub fn delete(connection: &mut SqliteConnection, id: i32) -> QueryResult<usize> {
+        Self::find(connection, id)?;
         diesel::delete(rustaceans::table.find(id)).execute(connection)
     }
     fn last_inserted_id(connection: &mut SqliteConnection) -> QueryResult<i32> {

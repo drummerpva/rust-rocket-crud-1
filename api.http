@@ -23,7 +23,7 @@ Authorization: Basic {{basicToken}}
   "email": "sdasdas@dasdasd.com"
 }
 ###
-PUT {{url}}/rustaceans/2
+PUT {{url}}/rustaceans/3
 Content-Type: application/json
 Authorization: Basic {{basicToken}}
 
@@ -32,5 +32,5 @@ Authorization: Basic {{basicToken}}
   "email": "alterado@des.com"
 }
 ###
-DELETE {{url}}/rustaceans/1
+DELETE {{url}}/rustaceans/3
 Authorization: Basic {{basicToken}}
