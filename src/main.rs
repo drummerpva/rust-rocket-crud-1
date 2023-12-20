@@ -1,9 +1,9 @@
 mod auth;
 mod models;
+mod repositories;
 mod schema;
 use auth::BasicAuth;
-use diesel::prelude::*;
-use models::{NewRustacean, Rustacean};
+use models::NewRustacean;
 use rocket::{
     catch, catchers, delete, get, post, put,
     response::status,
@@ -11,19 +11,17 @@ use rocket::{
     serde::json::{Json, Value},
 };
 use rocket_sync_db_pools::database;
-use schema::rustaceans;
 use serde_json::json;
+
+use crate::repositories::RustaceanRepository;
 #[database("sqlite")]
 struct DbConn(diesel::SqliteConnection);
 
 #[get("/rustaceans")]
 async fn get_rustaceans(_auth: BasicAuth, db: DbConn) -> Value {
     db.run(|connection| {
-        let rustaceans_data = rustaceans::table
-            .order(rustaceans::id.desc())
-            .limit(1000)
-            .load::<Rustacean>(connection)
-            .expect("Load rustaceans error");
+        let rustaceans_data =
+            RustaceanRepository::find_multiple(connection, 10).expect("Error on get rustaceans");
         json!(rustaceans_data)
     })
     .await
@@ -32,10 +30,8 @@ async fn get_rustaceans(_auth: BasicAuth, db: DbConn) -> Value {
 #[get("/rustaceans/<id>")]
 async fn view_rustacean(id: i32, _auth: BasicAuth, db: DbConn) -> Value {
     db.run(move |connection| {
-        let rustacean = rustaceans::table
-            .find(id)
-            .get_result::<Rustacean>(connection)
-            .expect("Error on get rustacean by ID");
+        let rustacean =
+            RustaceanRepository::find(connection, id).expect("Error on get rustacean by ID");
         json!(rustacean)
     })
     .await
@@ -48,9 +44,7 @@ async fn create_rustacean(
     new_rustacean: Json<NewRustacean>,
 ) -> Value {
     db.run(|connection| {
-        let result = diesel::insert_into(rustaceans::table)
-            .values(new_rustacean.into_inner())
-            .execute(connection)
+        let result = RustaceanRepository::create(connection, new_rustacean.into_inner())
             .expect("Insert rustacean error");
         json!(result)
     })
@@ -64,12 +58,7 @@ async fn update_rustacean(
     db: DbConn,
 ) -> Value {
     db.run(move |connection| {
-        let result = diesel::update(rustaceans::table.find(id))
-            .set((
-                rustaceans::name.eq(&rustacean.name),
-                rustaceans::email.eq(&rustacean.email),
-            ))
-            .execute(connection)
+        let result = RustaceanRepository::save(connection, id, rustacean.into_inner())
             .expect("Error on update rustacean");
         json!(result)
     })
@@ -78,9 +67,7 @@ async fn update_rustacean(
 #[delete("/rustaceans/<id>")]
 async fn delete_rustacean(id: i32, _auth: BasicAuth, db: DbConn) -> status::NoContent {
     db.run(move |connection| {
-        diesel::delete(rustaceans::table.find(id))
-            .execute(connection)
-            .expect("Error on delete rustacean");
+        RustaceanRepository::delete(connection, id).expect("Error on delete rustacean");
         status::NoContent
     })
     .await
