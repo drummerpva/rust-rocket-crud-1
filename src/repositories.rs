@@ -1,7 +1,9 @@
 use diesel::prelude::*;
+use rocket::{Build, Rocket};
 
 use crate::{
     models::{NewRustacean, Rustacean},
+    routes::DbConn,
     schema::rustaceans,
 };
 
@@ -55,4 +57,19 @@ impl RustaceanRepository {
             .order(rustaceans::id.desc())
             .first(connection)
     }
+}
+
+pub async fn run_db_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
+    use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+    const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
+    DbConn::get_one(&rocket)
+        .await
+        .expect("Unable to retrieve connection")
+        .run(|connection| {
+            connection
+                .run_pending_migrations(MIGRATIONS)
+                .expect("Unable to run migrations");
+        })
+        .await;
+    rocket
 }
